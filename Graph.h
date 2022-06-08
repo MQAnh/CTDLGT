@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <vector>
 #include <queue>
+#include <string>
 // Declare
 const int max_edge = 100;
 constexpr auto INF = 10000;
@@ -15,6 +16,8 @@ typedef pair<float, int> II;
 #define _GRAPH_H_
 
 // Declare class Graph
+
+
 class Graph
 {
 private:
@@ -27,6 +30,8 @@ public:
     Graph();//Default constructor
     Graph(int num_vextex);//Parameterized constructor
     Graph(const Graph& g);//Copy constructor
+    int check(string num);
+    float checkf(string num);
     int getNumVertex();//get number of vertex.
     int getNumEdge();//get number of edge.
     void setWeight(int vertex_first, int vertex_second, float weight); //Set/change weight of edge
