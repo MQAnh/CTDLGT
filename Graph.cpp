@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <vector>
 #include <queue>
+#include <string>
 #include "Graph.h"
 
 
@@ -22,8 +23,9 @@ Graph::Graph(int num_vextex)
 {
     num_of_vertex = num_vextex;
     num_of_edge = 0;
-    float weight;
-    cout << "Enter weight: (INF - no conncet: -1)" << endl;
+    string weight;
+    float weight_;
+    cout << "Enter weight: (inf - no conncet)" << endl;
 
     for (int i = 0; i < num_of_vertex; i++)
     {
@@ -33,31 +35,25 @@ Graph::Graph(int num_vextex)
             {
                 cout << "Vertex " << i << " <----> " << j << " :";
                 cin >> weight;
-                while (!weight)
+                weight_ = checkf(weight);
+                while (!weight_ && weight_ != INF)
                 {
-                    cout << "Invalid, enter weight again: ";
+                    cout << "Enter again: ";
                     cin >> weight;
+                    weight_ = checkf(weight);
                 }
-                if (weight != -1)
-                {
-                    adj[i].push_back({ weight, j });
-                    adj[j].push_back({ weight, i });
-                    num_of_edge++;
-                }
+                float weight_ = checkf(weight);
+                adj[i].push_back({ weight_, j });
+                adj[j].push_back({ weight_, i });
+                num_of_edge++;
             }
         }
     }
     dist = new float[num_of_vertex];
     trace = new int[num_of_vertex];
     check_if_visted = new bool[num_of_vertex];
-
-    for (int i = 0; i < num_of_vertex; i++) {
-        *(dist + i) = INF;
-        *(trace + i) = -1;
-        *(check_if_visted + i) = false;
-    }
-
     cout << endl;
+    print_weight();
 
 }
 //Copy constructor
@@ -80,6 +76,81 @@ Graph::Graph(const Graph& g)
         }
     }
 
+
+}
+//Check input number
+int Graph::check(string num)
+{
+    bool check_ = 1;
+    while (check_)
+    {
+        int strlen = num.length();
+        int count = 0;
+        try
+        {
+            for (int i = 0; i < strlen; i++)
+            {
+                if (num[i] < '0' || num[i] > '9')
+                {
+                    throw(num);
+                    break;
+                }
+                else
+                {
+                    count++;
+                }
+            }
+        }
+        catch (...)
+        {
+            cout << "Invaild value, enter again: ";
+            cin >> num;
+        }
+        if (count == strlen) check_ = 0;
+    }
+    return stoi(num);
+
+}
+//Check input weight
+float Graph:: checkf(string num)
+{
+    bool check_ = true;
+    if (num == "inf")
+    {
+        return INF;
+    }
+    else
+    {
+        while (check_)
+        {
+            int strlen = num.length();
+            int count = 0;
+            try
+            {
+                for (int i = 0; i < strlen; i++)
+                {
+                    if ((num[i] < '0' || num[i] > '9') && num[i] != '.')
+                    {
+                        throw(num);
+                        break;
+                    }
+                    else
+                    {
+                        count++;
+                    }
+                }
+            }
+            catch (...)
+            {
+                cout << "Invaild value, enter again: ";
+                cin >> num;
+            }
+            cout << "count"<<count<<endl;
+            cout << endl << "string" << strlen;
+            if (count == strlen) check_ = false;
+        }
+        return stof(num);
+    }
 }
 //get number of vertex.
 int Graph::getNumVertex()
@@ -115,6 +186,7 @@ void Graph::setWeight(int vertex_first, int vertex_second, float weight)
             }else adj[vertex_second].at(i).first = weight;
         }
     }
+    print_weight();
 
 }
 //Get weight of egde
@@ -135,25 +207,20 @@ float Graph::getWeight(int vertex_first, int vertex_second)
 //insert a new vertex to Graph
 void Graph::insertVertex()
 {
+    string weight_;
     float weight;
     int count = 0, i;
     cout << endl << "-----------------------------------" << endl << "Insert new vertex" << endl;
-    cout << "Enter weights: (INF- no conncet: -1): " << endl;
+    cout << "Enter weights: (inf- no conncet): " << endl;
     for (i = 0; i < num_of_vertex; i++)
     {
         cout << "Vertex " << i << " <----> " << num_of_vertex << " :";
-        cin >> weight;
-        while (!weight)
-        {
-            cout << "Invalid, enter weight again: ";
-            cin >> weight;
-        }
-        if (weight != -1)
-        {
-            adj[i].push_back({ weight, num_of_vertex });
-            adj[num_of_vertex].push_back({ weight, i });
-            count++;
-        }
+        cin >> weight_;
+        weight = checkf(weight_);
+        adj[i].push_back({ weight, num_of_vertex });
+        adj[num_of_vertex].push_back({ weight, i });
+        count++;
+
     }
     num_of_vertex++;
     num_of_edge += count;
@@ -164,13 +231,16 @@ void Graph::insertVertex()
 void Graph::deleteVertex()
 {
     cout << endl << "--------------------------------------" << endl << "Delete vertex" << endl;
+    string vertex_;
     int vertex, i;
     cout << "Enter delete_vertex: ";
-    cin >> vertex;
-    while (vertex < 0 || vertex >= num_of_vertex)
+    cin >> vertex_;
+    vertex = check(vertex_);
+    while (vertex >= num_of_vertex)
     {
-        cout << "Invalid, enter weight again: ";
-        cin >> vertex;
+        cout << "Must fewer than " << num_of_vertex << " routers, enter again: ";
+        cin >> vertex_;
+        vertex = check(vertex_);
     }
     num_of_edge -= adj[vertex].size();
     while (!adj[vertex].empty())
@@ -192,7 +262,7 @@ void Graph::deleteVertex()
 * 4. While either q doesn't become empty
 * +> Extract minimum distance vertex from q. Let the extracted vertex be u and remove it from q.
 * +> Loop through all adjacent of u and do following for every vertex v.
-*  --- if vertex is visited: move to next lopp (*(check_if_visted + u) = false)
+*  --- if vertex is visited: move to next lopp (*(check_if_visted + u) = true)
 *  --- else: set *(check_if_visited + u) = true.
 *  --- if *(dist + v) > *(dist + u) + weight(u,v).
 *  --- update *(dist + v) = *(dist + u) + weight(u,v).
@@ -202,11 +272,16 @@ void Graph::deleteVertex()
 */
 void Graph::Dijsktra(int vertex_start)
 {
+    for (int i = 0; i < num_of_vertex; i++) {
+        *(dist + i) = INF;
+        *(trace + i) = -1;
+        *(check_if_visted + i) = false;
+    }
     *(dist + vertex_start) = 0;
     priority_queue<II, vector<II>, greater<II>> q;
     q.push({ *(dist + vertex_start), vertex_start });
     cout << endl << "----------------------------------------------" << endl;
-    cout << "Vertex\tDistance from source"<<endl;
+    cout << "Vertex\tDistance from router"<< vertex_start <<endl;
     while (!q.empty())
     {
         int u = q.top().second;
@@ -227,7 +302,7 @@ void Graph::Dijsktra(int vertex_start)
                 *(dist + v) = *(dist + u) + w;
                 q.push({ *(dist + v), v });
                 *(trace + v) = u;
-                cout << *(dist + v) << "\t" << *(trace + v) << endl;
+                cout << v  << "\t" << *(dist + v) << endl;
             }
         }
     }
@@ -237,6 +312,7 @@ void Graph::Dijsktra(int vertex_start)
 vector<II> Graph::trace_shortest_path(int start_vertex, int end_vertex)
 {
     vector<II> path;
+    
     Dijsktra(start_vertex);
     if (end_vertex != start_vertex && *(trace + end_vertex) == -1)
     {
@@ -257,25 +333,32 @@ vector<II> Graph::trace_shortest_path(int start_vertex, int end_vertex)
 void Graph::print_shorestpath()
 {
     cout << endl << "<------------------------------------------->" << endl;
-    cout << endl << "Find shortest path from vertex x to y:\nEnter start-vertex: ";
-    int start_vertex, end_vertex, i;
-    //Start_vertex
-    cin >> start_vertex;
-    while (start_vertex < 0 || start_vertex >=num_of_vertex)
+    cout << endl << "Find shortest path from router x to router y:\nEnter start-router: ";
+
+    string start_router, end_router;
+    int start_router_, end_router_, i;
+    //First router
+    cin >> start_router;
+    start_router_ = check(start_router);
+    while (start_router_ >= num_of_vertex)
     {
-        cout << "Invaild value, enter again: ";
-        cin >>start_vertex;
+        cout << "Must less than " << num_of_vertex << " routers, enter again: ";
+        cin >> start_router;
+        start_router_ = check(start_router);
     }
-    //End_vertex
-    cout << "Enter end-vertex: ";
-    cin >> end_vertex;
-    while (end_vertex < 0 || end_vertex >= num_of_vertex)
+
+    //Second router
+    cout << "Enter end router: ";
+    cin >> end_router;
+    end_router_ = check(end_router);
+    while (end_router_ >= num_of_vertex)
     {
-        cout << "Invaild value, enter again: ";
-        cin >> end_vertex;
+        cout << "Must fewer than " << num_of_vertex << " routers, enter again: ";
+        cin >> end_router;
+        end_router_ = check(end_router);
     }
     //Shortest path
-    vector<II> shortest_path = trace_shortest_path(start_vertex, end_vertex);
+    vector<II> shortest_path = trace_shortest_path(start_router_, end_router_);
     int size = shortest_path.size();
     cout << "---------------------------------" << endl << "Router:  ";
     for (i = size - 1; i > 0; i--)
@@ -292,7 +375,7 @@ void Graph::print_shorestpath()
 }
 void Graph::print_weight()
 {
-    cout << "Graph:" << endl << num_of_vertex << " vertexs - " << num_of_edge << " edges." << endl;
+    cout << "Graph:" << endl << num_of_vertex << " routers - " << num_of_edge << " edges." << endl;
     cout << "Weight matrix:" << endl;
     cout << "\t";
     for (int i = 0; i < num_of_vertex - 1; i++)
@@ -317,7 +400,7 @@ void Graph::print_weight()
 Graph:: ~Graph()
 {
     adj->clear();
-    delete[]dist;
-    delete[]trace;
-    delete[]check_if_visted;
+    if (dist != NULL) free(dist);
+    if(trace != NULL) free(trace);
+    if(check_if_visted != NULL) free(check_if_visted);
 }
