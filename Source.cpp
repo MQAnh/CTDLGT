@@ -11,11 +11,11 @@ int main()
     Graph a;
     //Menu
     cout << "----------------------------------------------------------------" << endl;
-    cout << "1. Creat a graph of routers\t\t2. Number of routers" << endl;
+    cout << "1. Creat a graph of vertexs\t\t2. Number of vertexs" << endl;
     cout << "3. Number of edges         \t\t4. Change weight" << endl;
-    cout << "5. Print weight of edge    \t\t6. Insert a router" << endl;
-    cout << "7. Remove router           \t\t8. Print weight" << endl;
-    cout << "9. Print shortest path from router x to router y" << endl;
+    cout << "5. Print weight of edge    \t\t6. Insert a vertex" << endl;
+    cout << "7. Remove vertex           \t\t8. Print weight" << endl;
+    cout << "9. Print shortest path from vertex x to vertex y" << endl;
     cout << "10. Finish" << endl;
     cout << "----------------------------------------------------------------" << endl;
 
@@ -127,7 +127,16 @@ int main()
             }
             else if (option_ == 9)
             {
-                a.print_shorestpath();
+                int algrothim;
+                cout << endl << "1. Dijsktra\t2. Bellman Ford\t3. Floyd Warshall\nChoose an algrothim: ";
+                cin >> algrothim;
+                while (algrothim < 1 || algrothim > 3)
+                {
+                    cout << "Enter again:";
+                    cin >> algrothim;
+                }
+
+                a.print_shorestpath(algrothim);
             }
             else
             {
