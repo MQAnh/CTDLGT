@@ -39,8 +39,10 @@ public:
     void insertVertex();//insert a new vertex to Graph
     void deleteVertex(); //remove a vertex from Graph
     void Dijsktra(int vertex_start); //Dijsktra algorithm using priority queue to find a shortest path from a vertex to the others vertexs in Graph.
-    vector<II> trace_shortest_path(int start_vertex, int end_vertex);//Store shortest path from between two vertex
-    void print_shorestpath();// display path
+    void BellmanFord(int vertex_start);
+    void FloydWarshall(int vertex_start, int vertex_end);
+    vector<II> trace_shortest_path(int start_vertex, int end_vertex, int alg);//Store shortest path from between two vertex
+    void print_shorestpath(int alg);// display path
     void print_weight();//display weight of edges in Graph
     ~Graph();//Destructor, free memory.
 };
