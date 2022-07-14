@@ -54,7 +54,7 @@ int main()
             if (a.getNumVertex() == 0)
             {
                 string num;
-                cout << "Enter the number of routers (must greater than 1): ";
+                cout << "Enter the number of vertexs (must greater than 1): ";
                 cin >> num;
                 int number_router = a.check(num);
                 while (number_router < 2)
@@ -65,7 +65,7 @@ int main()
             }
             if (option_ == 2)
             {
-                cout << "Number of routers: " << a.getNumVertex() << endl;
+                cout << "Number of vertexs: " << a.getNumVertex() << endl;
             }
             else if (option_ == 3)
             {
@@ -77,23 +77,23 @@ int main()
                 int first_router_, second_router_;
                 float weight_;
                 //First router
-                cout << "Enter first router: ";
+                cout << "Enter first vertex: ";
                 cin >> first_router;
                 first_router_ = a.check(first_router);
                 while (first_router_ >= a.getNumVertex())
                 {
-                    cout << "Must less than " << a.getNumVertex() << " routers, enter again: ";
+                    cout << "Must less than " << a.getNumVertex() << " vertexs, enter again: ";
                     cin >> first_router;
                     first_router_ = a.check(first_router);
                 }
 
                 //Second router
-                cout << "Enter second router: ";
+                cout << "Enter second vertex: ";
                 cin >> second_router;
                 second_router_ = a.check(second_router);
                 while (second_router_ >= a.getNumVertex())
                 {
-                    cout << "Must fewer than " << a.getNumVertex() << " routers, enter again: ";
+                    cout << "Must fewer than " << a.getNumVertex() << " vertexs, enter again: ";
                     cin >> second_router;
                     second_router_ = a.check(second_router);
                 }
