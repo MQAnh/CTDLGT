@@ -323,7 +323,7 @@ void Graph::Dijsktra(int vertex_start)
     priority_queue<II, vector<II>, greater<II>> q;
     q.push({ *(dist + vertex_start), vertex_start });
     cout << endl << "----------------------------------------------" << endl;
-    cout << "Vertex\tDistance from router"<< vertex_start <<endl;
+    cout << "Vertex\tDistance from vertex "<< vertex_start <<endl;
     while (!q.empty())
     {
         int u = q.top().second;
@@ -430,6 +430,7 @@ void Graph::FloydWarshall(int vertex_start, int vertex_end)
         {
             for (int v = 0; v < num_of_vertex; v++)
             {
+                
 
                 if (dist_floyd[u][v] > dist_floyd[u][k] + dist_floyd[k][v])
                 {
@@ -457,11 +458,13 @@ void Graph::FloydWarshall(int vertex_start, int vertex_end)
         path.push_back({ dist_floyd[vertex_start][vertex_tmp], tracefloyd[vertex_start][vertex_end] });
         vertex_end = vertex_tmp;
     }
+    cout << "---------------------------------" << endl << "Vertex:  ";
     for (int i = path.size() - 1; i > 0; i--)
     {
         cout << path[i].second << " ----> ";
     }
     cout << path[0].second << endl;
+    cout << "Path_dis: ";
     for (int i = path.size() - 1; i > 0; i--)
     {
         cout << path[i].first << " ----> ";
@@ -508,7 +511,7 @@ vector<II> Graph::trace_shortest_path(int start_vertex, int end_vertex, int alg)
 void Graph::print_shorestpath(int alg)
 {
     cout << endl << "<------------------------------------------->" << endl;
-    cout << endl << "Find shortest path from router x to router y:\nEnter start-vertex: ";
+    cout << endl << "Find shortest path from vertex x to vertex y:\nEnter start-vertex: ";
 
     string start_router, end_router;
     int start_router_, end_router_, i;
@@ -523,7 +526,7 @@ void Graph::print_shorestpath(int alg)
     }
 
     //Second router
-    cout << "Enter end router: ";
+    cout << "Enter end vertex: ";
     cin >> end_router;
     end_router_ = check(end_router);
     while (end_router_ >= num_of_vertex)
